@@ -1,6 +1,6 @@
 <?php
 
-require '/var/www/app/models/problem.php';
+require '/var/www/app/models/Problem.php';
 
 $method = $_SERVER['REQUEST_METHOD'];
 

@@ -1,5 +1,4 @@
 <?php
-
 require '/var/www/app/models/Problem.php';
 
 $title = 'Novo Problema';

@@ -1,8 +1,5 @@
 <?php
-require '/var/www/app/models/Problem.php';
+require '/var/www/app/controllers/ProblemsController.php';
 
-$title = 'Novo Problema';
-$view = '/var/www/app/views/problems/new.phtml';
-$problem = new Problem();
-
-require '/var/www/app/views/layouts/application.phtml';
+$controller = new ProblemsController();
+$controller->new();

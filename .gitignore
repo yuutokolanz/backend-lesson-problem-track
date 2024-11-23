@@ -7,4 +7,12 @@
 # Ignore logs and temporary files
 *.log
 *.tmp
+
+# Ignore vendor folder
 /vendor/
+
+# Ignore cache folder
+.cache/*
+
+# Ignore .env
+.env

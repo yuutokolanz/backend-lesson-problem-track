@@ -88,6 +88,8 @@ class Problem
 
   public static function all(): array
   {
+    if(!file_exists(self::DB_PATH())) return [];
+    
     $problems = file(self::DB_PATH(), FILE_IGNORE_NEW_LINES);
 
     return array_map(function ($line, $title) {
@@ -108,6 +110,6 @@ class Problem
 
   private static function DB_PATH()
   {
-    return '/var/www/database/' . $_ENV['DB_NAME'];
+    return DATABASE_PATH . $_ENV['DB_NAME'];
   }
 }

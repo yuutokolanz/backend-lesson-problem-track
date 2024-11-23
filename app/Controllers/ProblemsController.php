@@ -102,7 +102,8 @@ class ProblemsController
     require '/var/www/app/views/layouts/' . $this->layout . '.phtml';
   }
 
-  private function renderJson($view, $data = []) {
+  private function renderJson($view, $data = [])
+  {
     extract($data);
 
     $view = '/var/www/app/views/problems/' . $view . '.json.php';
@@ -120,7 +121,8 @@ class ProblemsController
     exit;
   }
 
-  private function isJsonRequest() {
+  private function isJsonRequest()
+  {
     return isset($_SERVER['HTTP_ACCEPT']) && $_SERVER['HTTP_ACCEPT'] === 'application/json';
   }
 }

@@ -1,13 +1,14 @@
 <?php
 
+use Core\Constants\Constants;
 use Core\Errors\ErrorsHandler;
 
 require __DIR__ . '/../vendor/autoload.php';
 
 ErrorsHandler::init();
 
-require_once dirname(__DIR__) . '/core/Constants/general.php';
+Constants::rootPath();
 
-require_once ROOT_PATH . '/core/Env/env.php';
-require_once ROOT_PATH . '/core/Debug/functions.php';
-// require_once ROOT_PATH . '/core/errors/handler.php';
+require_once Constants::rootPath() . '/core/Env/env.php';
+// require_once ROOT_PATH . '/core/Debug/functions.php';
+// // require_once ROOT_PATH . '/core/errors/handler.php';

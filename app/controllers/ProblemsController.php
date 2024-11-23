@@ -12,7 +12,10 @@ class ProblemsController
 
     $title = 'Problemas Registrados';
 
-    $this->render('index', compact('problems', 'title'));
+    if ($this->isJsonRequest())
+      $this->renderJson('index', compact('problems', 'title'));
+    else
+      $this->render('index', compact('problems', 'title'));
   }
 
   public function show()
@@ -97,9 +100,25 @@ class ProblemsController
     require '/var/www/app/views/layouts/' . $this->layout . '.phtml';
   }
 
+  private function renderJson($view, $data = []) {
+    extract($data);
+
+    $view = '/var/www/app/views/problems/' . $view . '.json.php';
+    $json = [];
+
+    header('Content-Type: application/json; charset=utf-8');
+    require $view;
+    echo json_encode($json);
+    return;
+  }
+
   private function redirectTo($location)
   {
     header('Location: ' . $location);
     exit;
+  }
+
+  private function isJsonRequest() {
+    return isset($_SERVER['HTTP_ACCEPT']) && $_SERVER['HTTP_ACCEPT'] === 'application/json';
   }
 }

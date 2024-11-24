@@ -40,7 +40,7 @@ class ProblemsController
         $this->render('new', compact('problem', 'title'));
     }
 
-    public function create():void
+    public function create(): void
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirectTo('/pages/problems');
@@ -115,7 +115,7 @@ class ProblemsController
     /**
      * @param array<string, mixed> $data
      */
-    private function renderJson(string $view,array $data = []): void
+    private function renderJson(string $view, array $data = []): void
     {
         extract($data);
 

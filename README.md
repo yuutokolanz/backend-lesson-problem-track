@@ -29,18 +29,34 @@ $ chmod 665 ./database/problems.txt
 
 #### Install the dependencies
 ```
-$ docker compose run --rm composer install
+$ ./run composer install
 ```
 
 #### Up the containers
 ```
-$ docker compose up -d
+$ docker compose up -d 
 ```
-
+ou
+```
+$ ./run up -d 
+```
 
 #### Run the tests
 ```
 $ docker compose run --rm php ./vendor/bin/phpunit tests --color
+```
+ou
+```
+$ ./run test 
+```
+
+#### Run the linters
+```
+$ ./run phpcs
+```
+e
+```
+$ ./run phpstan
 ```
 
 Access [localhost](http://localhost)

@@ -12,7 +12,8 @@ class Problem
     public function __construct(
         private string $title = '',
         private int $id = -1
-    ) {}
+    ) {
+    }
 
     public function setId(int $id): void
     {
@@ -46,6 +47,7 @@ class Problem
                 $stmt->execute();
 
                 $this->id = (int) $pdo->lastInsertId();
+                return true;
             } else {
                 $sql = 'UPDATE problems SET title = :title WHERE id = :id;';
                 $stmt = $pdo->prepare($sql);
@@ -53,6 +55,7 @@ class Problem
                 $stmt->bindParam(':title', $this->title);
 
                 $stmt->execute();
+                return true;
             }
         }
         return false;

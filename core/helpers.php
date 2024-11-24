@@ -11,8 +11,9 @@ if (!function_exists('dd')) {
 }
 
 if (!function_exists('route')) {
-    function route(string $name): string
+    /** @param mixed[] $params */
+    function route(string $name, $params = []): string
     {
-        return Router::getInstance()->getRoutePathByName($name);
+        return Router::getInstance()->getRoutePathByName($name, $params);
     }
 }

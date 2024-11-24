@@ -1,8 +1,19 @@
 <?php
 
 use Core\Debug\Debugger;
+use Core\Router\Router;
 
-function dd(): void
-{
-    Debugger::dd(...func_get_args());
+if (!function_exists('dd')) {
+    function dd(): void
+    {
+        Debugger::dd(...func_get_args());
+    }
+}
+
+if (!function_exists('route')) {
+    /** @param mixed[] $params */
+    function route(string $name, $params = []): string
+    {
+        return Router::getInstance()->getRoutePathByName($name, $params);
+    }
 }

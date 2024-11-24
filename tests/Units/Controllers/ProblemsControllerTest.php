@@ -4,19 +4,25 @@ namespace Tests\Units\Controllers;
 
 use App\Controllers\ProblemsController;
 use App\Models\Problem;
+use Core\Constants\Constants;
 use Tests\Units\Controllers\ControllerTestCase;
 
 class ProblemsControllerTest extends ControllerTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        require Constants::rootPath()->join('/config/routes.php');
+    }
+
     public function test_list_all_problems(): void
     {
         $problems[] = new Problem(title: 'Problem 1');
         $problems[] = new Problem(title: 'Problem 2');
+
         foreach ($problems as $problem) {
             $problem->save();
         }
-
-        $controller = new ProblemsController();
 
         $response = $this->get(action: 'index', controller: 'App\Controllers\ProblemsController');
 

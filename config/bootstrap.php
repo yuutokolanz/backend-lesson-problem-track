@@ -1,9 +1,9 @@
 <?php
 
-require_once dirname(__DIR__) . '/core/constants/general.php';
-
-require_once ROOT_PATH . '/core/env/env.php';
-require_once ROOT_PATH . '/core/debug/functions.php';
-require_once ROOT_PATH . '/core/errors/handler.php';
+use Core\Env\EnvLoader;
+use Core\Errors\ErrorsHandler;
 
 require __DIR__ . '/../vendor/autoload.php';
+
+ErrorsHandler::init();
+EnvLoader::init();

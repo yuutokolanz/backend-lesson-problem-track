@@ -6,123 +6,136 @@ use App\Models\Problem;
 
 class ProblemsController
 {
-  private string $layout = 'application';
+    private string $layout = 'application';
 
-  public function index()
-  {
-    $problems = Problem::all();
+    public function index(): void
+    {
+        $problems = Problem::all();
 
-    $title = 'Problemas Registrados';
+        $title = 'Problemas Registrados';
 
-    if ($this->isJsonRequest())
-      $this->renderJson('index', compact('problems', 'title'));
-    else
-      $this->render('index', compact('problems', 'title'));
-  }
-
-  public function show()
-  {
-    $id = intval($_GET['id']);
-
-    $problem = Problem::findById($id);
-
-    $title = "Vizualização do Problema # {$id}";
-
-    $this->render('show', compact('problem', 'title'));
-  }
-
-  public function new()
-  {
-    $title = 'Novo Problema';
-    $problem = new Problem();
-
-    $this->render('new', compact('problem', 'title'));
-  }
-
-  public function create()
-  {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') $this->redirectTo('/pages/problems');
-
-    $params = $_POST['problem'];
-    $problem = new Problem(title: $params['title']);
-
-    if ($problem->save()) {
-      $this->redirectTo('/pages/problems');
-    } else {
-      $title = 'Novo Problema';
-      $this->render('new', compact('problem', 'title'));
+        if ($this->isJsonRequest()) {
+            $this->renderJson('index', compact('problems', 'title'));
+        } else {
+            $this->render('index', compact('problems', 'title'));
+        }
     }
-  }
 
-  public function edit()
-  {
-    $id = intval($_GET['id']);
+    public function show(): void
+    {
+        $id = intval($_GET['id']);
 
-    $problem = Problem::findById($id);
+        $problem = Problem::findById($id);
 
-    $title = "Editar Problema # {$id}";
-    $this->render('edit', compact('problem', 'title'));
-  }
+        $title = "Vizualização do Problema # {$id}";
 
-  public function update()
-  {
-    $method = $_REQUEST['_method'] ?? ['REQUEST_METHOD'];
-    if ($method !== 'PUT') $this->redirectTo('/pages/problems');
-
-    $params = $_POST['problem'];
-
-    $problem = Problem::findById($params['id']);
-    $problem->setTitle($params['title']);
-
-    if ($problem->save()) {
-      $this->redirectTo('/pages/problems');
-    } else {
-      $title = "Editar Problema # {$problem->getId()}";
-      $this->render('edit', compact('problem', 'title'));
+        $this->render('show', compact('problem', 'title'));
     }
-  }
 
-  public function destroy()
-  {
-    $method = $_REQUEST['_method'] ?? ['REQUEST_METHOD'];
+    public function new(): void
+    {
+        $title = 'Novo Problema';
+        $problem = new Problem();
 
-    if ($method !== 'DELETE') $this->redirectTo('/pages/problems/');
+        $this->render('new', compact('problem', 'title'));
+    }
 
-    $problem = Problem::findById($_POST['problem']['id']);
-    $problem->destroy();
+    public function create():void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirectTo('/pages/problems');
+        }
 
-    $this->redirectTo('/pages/problems/');
-  }
+        $params = $_POST['problem'];
+        $problem = new Problem(title: $params['title']);
 
-  private function render($view, $data = [])
-  {
-    extract($data);
+        if ($problem->save()) {
+            $this->redirectTo('/pages/problems');
+        } else {
+            $title = 'Novo Problema';
+            $this->render('new', compact('problem', 'title'));
+        }
+    }
 
-    $view = '/var/www/app/views/problems/' . $view . '.phtml';
-    require '/var/www/app/views/layouts/' . $this->layout . '.phtml';
-  }
+    public function edit(): void
+    {
+        $id = intval($_GET['id']);
 
-  private function renderJson($view, $data = [])
-  {
-    extract($data);
+        $problem = Problem::findById($id);
 
-    $view = '/var/www/app/views/problems/' . $view . '.json.php';
-    $json = [];
+        $title = "Editar Problema # {$id}";
+        $this->render('edit', compact('problem', 'title'));
+    }
 
-    header('Content-Type: application/json; charset=utf-8');
-    require $view;
-    echo json_encode($json);
-    return;
-  }
+    public function update(): void
+    {
+        $method = $_REQUEST['_method'] ?? ['REQUEST_METHOD'];
+        if ($method !== 'PUT') {
+            $this->redirectTo('/pages/problems');
+        }
 
-  private function redirectTo($location)
-  {
-    header('Location: ' . $location);
-    exit;
-  }
+        $params = $_POST['problem'];
 
-  private function isJsonRequest()
-  {
-    return isset($_SERVER['HTTP_ACCEPT']) && $_SERVER['HTTP_ACCEPT'] === 'application/json';
-  }
+        $problem = Problem::findById($params['id']);
+        $problem->setTitle($params['title']);
+
+        if ($problem->save()) {
+            $this->redirectTo('/pages/problems');
+        } else {
+            $title = "Editar Problema # {$problem->getId()}";
+            $this->render('edit', compact('problem', 'title'));
+        }
+    }
+
+    public function destroy(): void
+    {
+        $method = $_REQUEST['_method'] ?? ['REQUEST_METHOD'];
+
+        if ($method !== 'DELETE') {
+            $this->redirectTo('/pages/problems/');
+        }
+
+        $problem = Problem::findById($_POST['problem']['id']);
+        $problem->destroy();
+
+        $this->redirectTo('/pages/problems/');
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function render(string $view, array $data = []): void
+    {
+        extract($data);
+
+        $view = '/var/www/app/views/problems/' . $view . '.phtml';
+        require '/var/www/app/views/layouts/' . $this->layout . '.phtml';
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function renderJson(string $view,array $data = []): void
+    {
+        extract($data);
+
+        $view = '/var/www/app/views/problems/' . $view . '.json.php';
+        $json = [];
+
+        header('Content-Type: application/json; charset=utf-8');
+        require $view;
+        echo json_encode($json);
+        return;
+    }
+
+    private function redirectTo(string $location): void
+    {
+        header('Location: ' . $location);
+        exit;
+    }
+
+    private function isJsonRequest(): bool
+    {
+        return isset($_SERVER['HTTP_ACCEPT']) && $_SERVER['HTTP_ACCEPT'] === 'application/json';
+    }
 }

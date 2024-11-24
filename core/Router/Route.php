@@ -56,7 +56,7 @@ class Route
     {
         return $this->method === $request->getMethod();
     }
-
+    
     private function isSameUri(Request $request): bool
     {
         $uri = strtok($request->getUri(), '?');

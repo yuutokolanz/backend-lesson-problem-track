@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Core\Constants\Constants;
+use Core\Database\Database;
 
 class Problem
 {
@@ -11,8 +12,7 @@ class Problem
     public function __construct(
         private string $title = '',
         private int $id = -1
-    ) {
-    }
+    ) {}
 
     public function setId(int $id): void
     {
@@ -37,29 +37,38 @@ class Problem
     public function save(): bool
     {
         if ($this->isValid()) {
+            $pdo = Database::getDatabaseConn();
             if ($this->newRecord()) {
-                $this->id = file_exists(self::dbPath()) ? count(file(self::dbPath())) : 0;
-                file_put_contents(self::dbPath(), $this->title . PHP_EOL, FILE_APPEND);
-                return true;
-            } else {
-                $problems = file(self::dbPath(), FILE_IGNORE_NEW_LINES);
-                $problems[$this->id] = $this->title;
+                $sql = 'INSERT INTO problems (title) VALUES (:title);';
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':title', $this->title);
 
-                $data = implode(PHP_EOL, $problems);
-                file_put_contents(self::dbPath(), $data . PHP_EOL);
-                return true;
+                $stmt->execute();
+
+                $this->id = (int) $pdo->lastInsertId();
+            } else {
+                $sql = 'UPDATE problems SET title = :title WHERE id = :id;';
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':id', $this->id);
+                $stmt->bindParam(':title', $this->title);
+
+                $stmt->execute();
             }
         }
         return false;
     }
 
-    public function destroy(): void
+    public function destroy(): bool
     {
-        $problems = file(self::dbPath(), FILE_IGNORE_NEW_LINES);
-        unset($problems[$this->id]);
+        $pdo = Database::getDatabaseConn();
 
-        $data = implode(PHP_EOL, $problems);
-        file_put_contents(self::dbPath(), $data . PHP_EOL);
+        $sql = 'DELETE FROM problems WHERE id = :id;';
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':id', $this->id);
+
+        $stmt->execute();
+
+        return ($stmt->rowCount() !== 0);
     }
 
     public function isValid(): bool
@@ -97,31 +106,33 @@ class Problem
      */
     public static function all(): array
     {
-        if (!file_exists(self::dbPath())) {
-            return [];
+        $problems = [];
+
+        $pdo = Database::getDatabaseConn();
+        $resp = $pdo->query('SELECT id, title FROM problems;');
+
+        foreach ($resp as $row) {
+            $problems[] = new Problem(id: $row['id'], title: $row['title']);
         }
 
-        $problems = file(self::dbPath(), FILE_IGNORE_NEW_LINES);
-
-        return array_map(function ($line, $title) {
-            return new Problem(id: $line, title: $title);
-        }, array_keys($problems), $problems);
+        return $problems;
     }
 
     public static function findById(int $id): Problem|null
     {
-        $problems = self::all();
+        $pdo = Database::getDatabaseConn();
 
-        foreach ($problems as $problem) {
-            if ($problem->getId() === $id) {
-                return $problem;
-            }
+        $sql = 'SELECT id, title FROM problems WHERE id = :id;';
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':id', $id);
+
+        $stmt->execute();
+        if ($stmt->rowCount() == 0) {
+            return null;
         }
-        return null;
-    }
 
-    private static function dbPath(): string
-    {
-        return Constants::databasePath()->join($_ENV['DB_NAME']);
+        $row = $stmt->fetch();
+
+        return new Problem(id: $row['id'], title: $row['title']);
     }
 }

@@ -3,6 +3,8 @@
 namespace Core\Router;
 
 use Core\Constants\Constants;
+use Core\Exceptions\HTTPException;
+use Core\Exceptions\HTTPExceptions;
 use Core\Http\Request;
 use Exception;
 
@@ -89,7 +91,7 @@ class Router
                 return $controller;
             }
         }
-        return false;
+        return throw new HTTPException('URI ' . $request->getUri() . 'not found', 404);
     }
 
     public static function init(): void

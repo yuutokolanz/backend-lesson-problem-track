@@ -104,6 +104,14 @@ class RouterTest extends TestCase
         $this->assertEquals('/test/1/test-1/2', $router->getRoutePathByName('test.one', ['id' => 2, 'user_id' => 1]));
     }
 
+    public function test_should_get_route_path_by_name_with_params_and_query_params(): void
+    {
+        $router = Router::getInstance();
+        $router->addRoute(new Route('GET', '/test/{id}', MockController::class, 'action'))->name('test');
+
+        $this->assertEquals('/test/1?search=MVC', $router->getRoutePathByName('test', ['id' => 1, 'search' => 'MVC']));
+    }
+
     public function tes_should_return_an_exception_if_the_name_does_not_exist(): void
     {
         $router = Router::getInstance();

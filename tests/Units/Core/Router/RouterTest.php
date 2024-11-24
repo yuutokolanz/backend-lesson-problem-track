@@ -2,12 +2,19 @@
 
 namespace Tests\Units\Core\Router;
 
+use Core\Constants\Constants;
 use Core\Router\Route;
 use Core\Router\Router;
 use Tests\TestCase;
 
 class RouterTest extends TestCase
 {
+    public function setup(): void
+    {
+        parent::setUp();
+        require_once Constants::rootPath()->join('tests/Units/Core/Http/header_mock.php');
+    }
+
     public function test_get_singleton_should_return_the_same_object(): void
     {
         $rOne = Router::getInstance();

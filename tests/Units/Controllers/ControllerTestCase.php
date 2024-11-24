@@ -11,10 +11,13 @@ abstract class ControllerTestCase extends TestCase
         $controller = new $controller();
 
         ob_start();
-        $controller->index();
-        $response = ob_get_contents();
-        ob_end_clean();
-
-        return $response;
+        try {
+            $controller->$action();
+            return ob_get_contents();
+        } catch (\Exception $e) {
+            throw $e;
+        } finally {
+            ob_end_clean();
+        }
     }
 }

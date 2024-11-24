@@ -37,7 +37,7 @@ class ProblemsController
         $title = 'Novo Problema';
         $problem = new Problem();
 
-        $this->render('new', compact('problem', 'title'));
+        $this->render('new', compact('title', 'problem'));
     }
 
     public function create(): void

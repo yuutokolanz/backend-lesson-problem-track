@@ -2,7 +2,7 @@
 
 namespace Core\Router;
 
-use Core\HTTP\Request;
+use Core\Http\Request;
 
 class Route
 {
@@ -49,18 +49,46 @@ class Route
 
     public function match(Request $request): bool
     {
-        return $this->method === $request->getMethod() && $this->uri === $request->getUri();
+        return $this->isSameMethod($request) && $this->isSameUri($request);
+    }
+
+    private function isSameMethod(Request $request): bool
+    {
+        return $this->method === $request->getMethod();
+    }
+
+    private function isSameUri(Request $request): bool
+    {
+        $splittedRoute = explode('/', $this->getUri());
+        $splittedUri = explode('/', $request->getUri());
+
+        if (sizeof($splittedRoute) !== sizeof($splittedUri)) {
+            return false;
+        }
+
+        $params = [];
+        foreach ($splittedRoute as $index => $routePart) {
+            if (preg_match('/^{[a-z,_]+}$/', $routePart)) {
+                $key = substr($routePart, 1, -1);
+                $params[$key] = $splittedUri[$index];
+            } elseif ($routePart !== $splittedUri[$index]) {
+                return false;
+            }
+        }
+
+        $request->addParams($params);
+        return true;
     }
 
     /**
      * Static Methods
      _________________________________________________*/
 
-     /**
-      * @param string $uri
-      * @param mixed[] $action
-      * @return Route
-      */
+    /**
+     * @param string $uri
+     * @param mixed[] $action
+     * @return Route
+     */
 
     public static function get(string $uri, array $action): Route
     {
@@ -68,13 +96,35 @@ class Route
     }
 
     /**
-      * @param string $uri
-      * @param mixed[] $action
-      * @return Route
-      */
+     * @param string $uri
+     * @param mixed[] $action
+     * @return Route
+     */
 
     public static function post(string $uri, array $action): Route
     {
         return Router::getInstance()->addRoute(new Route('POST', $uri, $action[0], $action[1]));
+    }
+
+    /**
+     * @param string $uri
+     * @param mixed[] $action
+     * @return Route
+     */
+
+    public static function put(string $uri, array $action): Route
+    {
+        return Router::getInstance()->addRoute(new Route('PUT', $uri, $action[0], $action[1]));
+    }
+
+    /**
+     * @param string $uri
+     * @param mixed[] $action
+     * @return Route
+     */
+
+    public static function delete(string $uri, array $action): Route
+    {
+        return Router::getInstance()->addRoute(new Route('DELETE', $uri, $action[0], $action[1]));
     }
 }

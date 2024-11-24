@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\HTTP;
+namespace Core\Http;
 
 class Request
 {
@@ -41,5 +41,11 @@ class Request
     public function getHeaders(): array
     {
         return $this->headers;
+    }
+
+    /** @param mixed[] $params */
+    public function addParams(array $params): void
+    {
+        $this->params = array_merge($this->params, $params);
     }
 }

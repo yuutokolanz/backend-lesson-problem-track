@@ -3,7 +3,7 @@
 namespace Core\Router;
 
 use Core\Constants\Constants;
-use Core\HTTP\Request;
+use Core\Http\Request;
 use Exception;
 
 class Router

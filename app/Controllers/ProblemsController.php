@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Problem;
-use Core\HTTP\Request;
+use Core\Http\Request;
 
 class ProblemsController
 {

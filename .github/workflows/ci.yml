@@ -16,6 +16,9 @@ jobs:
       - name: Composer install
         run: ./run composer install
 
+      - name: PSR-4 Checker
+        run: ./run composer dump-autoload --strict-psr
+
       - name: PHPUnit
         run: ./run test
 

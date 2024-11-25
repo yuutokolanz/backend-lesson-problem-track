@@ -3,13 +3,7 @@
 set -o errexit
 set -o pipefail
 
-if [ -f .env ]; then
-    source .env
-fi
-
-if [ ! -f .env ]; then
-    source .env.example
-fi
+source .env
 
 function ps {
     docker compose ps

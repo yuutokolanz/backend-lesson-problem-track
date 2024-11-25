@@ -7,6 +7,10 @@ if [ -f .env ]; then
     source .env
 fi
 
+if [ ! -f .env ]; then
+    source .env.example
+fi
+
 function ps {
     docker compose ps
 }

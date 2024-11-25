@@ -15,4 +15,4 @@
 .cache/*
 
 # Ignore .env
-.env
+

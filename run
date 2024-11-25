@@ -4,8 +4,10 @@ set -o errexit
 set -o pipefail
 
 if [ -f .env ]; then
-    source .env    
-fi
+    source .env
+fi else {
+    echo "No .env file found"
+}
 
 function ps {
     docker compose ps

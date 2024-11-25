@@ -5,9 +5,7 @@ set -o pipefail
 
 if [ -f .env ]; then
     source .env
-fi else {
-    echo "No .env file found"
-}
+fi
 
 function ps {
     docker compose ps
